@@ -909,105 +909,104 @@
 					</div>
 				</a>
 			</div>
-			<div></div>
-			<div id='guestFeeds' style="display:none"><div id='deleteme'>
-				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<div class='vidcon' style='margin: 15px 20px 0 0; min-height: 300px;text-align: center;'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
-				<h4 style='color:#CCC;margin:20px 20px 0 20px;' data-translate='more-than-four-can-join' >These four guest slots are just for demonstration. More than four guests can actually join a room.</h4>
-			</div></div>
+			<div id='guestFeeds' class='placeholders' style="display:none">
+				<div class='vidcon'><h2>Guest 1</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon'><h2>Guest 2</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon'><h2>Guest 3</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+				<div class='vidcon'><h2>Guest 4</h2><i class='las la-user-circle' style='font-size:8em; margin: 20px 0px;' aria-hidden='true'></i></div>
+			</div>
 		</div>
 		
 		<div id="overlayMsgs" onclick="function(e){e.target.innerHTML = '';}" style="display:none"></div>
 		<div id="bigPlayButton" onclick="function(e){e.target.innerHTML = '';}" style="display:none"></div>
 		<div id="controls_blank" style="display: none;">
-			<div class="controlsGrid">
-			
-				<button data-action-type="forward"  data-value="0" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
-					<i class="las la-paper-plane"></i>
-					<span data-translate="forward-to-room">Transfer</span>
-				</button>
-				
-				<button data-action-type="direct-chat" title="Send a Direct Message to this user." onclick="directorSendMessage(this);">
-					<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
-				</button>
-
-				<button data-action-type="addToScene"  style="grid-column: 1;"  data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
-					<i class="las la-plus-square"></i>
-					<span data-translate="add-to-scene">Add to Scene</span>
-				</button>
-				<button data-action-type="mute-scene"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
-					<i class="las la-microphone-slash"></i>
-					<span data-translate="mute-scene" >mute in scene</span>
-				</button>
-				
-				<font class="tooltip" style="height: 0; border: 0;">
-					<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 1; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span></font>
-				
-				<button data-action-type="mute-guest"  style="grid-column: 2;" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
-					<i class="las la-microphone-slash"></i>
-					<span data-translate="mute-guest" >mute guest</span>
-				</button>
-
-				<span>
-					<button style="width: 35.2px" data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, this.dataset.UUID, this);">
-						<span data-translate="change-to-low-quality">&nbsp;&nbsp;<i class="las la-video-slash"></i></span>
-					</button>
-					<button class="pressed" style="width:35.2px;" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, this.dataset.UUID, this);">
-						<span data-translate="change-to-medium-quality">&nbsp;&nbsp;<i class="las la-video"></i></span>
-					</button>
-					<button style="width: 35.2px" data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, this.dataset.UUID, this);">
-						<span data-translate="change-to-high-quality">&nbsp;&nbsp;<i class="las la-binoculars"></i></span>
-					</button>
+			<div class="control_panel">
+				<h2 onclick="expandPanel(this)"><i class="las la-caret-right"></i>Guest</h2>
+				<span class="info">
+					<i class="las la-info-circle"></i>
 				</span>
-
-				<button data-action-type="hangup"  data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
-					<i class="las la-sign-out-alt"></i>
-					<span data-translate="disconnect-guest" >Hangup</span>
-				</button>
-				<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
-					<i class="las la-circle"></i>
-					<span data-translate="record-local"> Record Local</span>
-				</button>
-				<button data-action-type="recorder-remote" data-value="0" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
-					<i class="las la-circle"></i>
-					<span data-translate="record-remote"> Record Remote</span>
-				</button>
-				
-				<button class="" data-action-type="solo-chat" title="Toggle Solo Voice Chat" onclick="session.toggleSoloChat(this.dataset.UUID);">
-					<span data-translate="voice-chat"><i class="las la-microphone"></i> Solo Talk</span>
-				</button>
-				
-				<span>
-					<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrder(-1,this.dataset.UUID);">
-						<span data-translate="order-down"><i class="las la-minus"></i></span>
+				<div class="controlsGrid">
+					<button data-action-type="forward"  data-value="0" title="Move the user to another room, controlled by another director" onclick="directMigrate(this, event);">
+						<i class="las la-paper-plane"></i>
+						<span data-translate="forward-to-room">Transfer</span>
 					</button>
-					<span class="orderspan">
-						<div style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video" >0</div>
-						Mix Order
+					<button data-action-type="direct-chat" title="Send a Direct Message to this user." onclick="directorSendMessage(this);">
+						<span data-translate="send-direct-chat"><i class="las la-envelope"></i> Message</span>
+					</button>
+					<button data-action-type="recorder-local" title="Start Recording this remote stream to this local drive. *experimental*'" onclick="recordVideo(this, event)">
+						<i class="las la-circle"></i>
+						<span data-translate="record-local"> Record Local</span>
+					</button>
+					<button data-action-type="recorder-remote" data-value="0" title="The Remote Guest will record their local stream to their local drive. *experimental*" onclick="requestVideoRecord(this)">
+						<i class="las la-circle"></i>
+						<span data-translate="record-remote"> Record Remote</span>
+					</button>
+					<button data-action-type="hangup"  data-value="0" title="Force the user to Disconnect. They can always reconnect." onclick="directHangup(this, event);">
+						<i class="las la-sign-out-alt"></i>
+						<span data-translate="disconnect-guest" >Hangup</span>
+					</button>
+				</div>
+			</div>
+			<div class="control_panel">
+				<h2 onclick="expandPanel(this)"><i class="las la-caret-right"></i>Every other setting</h2>
+				<span class="info">
+					<i class="las la-info-circle"></i>
+				</span>
+				<div class="controlsGrid">
+					<button data-action-type="addToScene"  style="grid-column: 1;"  data-value="0" title="Add this Video to any remote '&scene=1'" onclick="directEnable(this, event);">
+						<i class="las la-plus-square"></i>
+						<span data-translate="add-to-scene">Add to Scene</span>
+					</button>
+					<button data-action-type="mute-scene"  style="grid-column: 2;" title="Remotely Mute this Audio in all remote '&scene' views" onclick="directMute(this, event);">
+						<i class="las la-microphone-slash"></i>
+						<span data-translate="mute-scene" >mute in scene</span>
+					</button>
+					
+					<font class="tooltip" style="height: 0; border: 0;">
+						<input data-action-type="volume" type="range" min="0" max="200" value="100" title="Remotely change the volume of this guest" oninput="remoteVolumeUI(this)" onclick="remoteVolume(this);" style="grid-column: 1; margin:5px; width: 93%; position: relative;top: 0.6em; background-color:#fff0;"/><span class="tooltiptext" style='float: right; overflow: auto;  left: 40px;  width: 2.5em;  top: -13px; margin: 0; position:relative;font-family:"Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", Times, Symbola, Aegyptus,Code2000, Code2001, Code2002, Musica, serif, LastResort;' >100</span></font>
+					
+					<button data-action-type="mute-guest"  style="grid-column: 2;" title="Mute this guest everywhere" onclick="remoteMute(this, event);">
+						<i class="las la-microphone-slash"></i>
+						<span data-translate="mute-guest" >mute guest</span>
+					</button>
+	
+					<button class="" data-action-type="solo-chat" title="Toggle Solo Voice Chat" onclick="session.toggleSoloChat(this.dataset.UUID);">
+						<span data-translate="voice-chat"><i class="las la-microphone"></i> Solo Talk</span>
+					</button>
+					
+					<span>
+						<button style="width:34px;" data-action-type="order-down" title="Shift this Video Down in Order"  onclick="changeOrder(-1,this.dataset.UUID);">
+							<span data-translate="order-down"><i class="las la-minus"></i></span>
+						</button>
+						<span class="orderspan">
+							<div style="text-align: center;font-size: 150%;" data-action-type="order-value" title="Current Index Order of this Video" >0</div>
+							Mix Order
+						</span>
+						<button style="width:34px;margin-left:0;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
+							<span data-translate="order-up"><i class="las la-plus"></i></span>
+						</button>
 					</span>
-					<button style="width:34px;margin-left:0;" data-action-type="order-up" title="Shift this Video Up in Order"  onclick="changeOrder(1,this.dataset.UUID);">
-						<span data-translate="order-up"><i class="las la-plus"></i></span>
+					
+					<button  data-action-type="toggle-remote-speaker"  style="grid-column: 1;" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
+						<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
 					</button>
-				</span>
+					<button  data-action-type="toggle-remote-display"  style="grid-column: 2;" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
+						<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
+					</button>
+					
+					<button class="" data-action-type="advanced-audio-settings"  data-active="false" style="grid-column: 1;" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
+						<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
+					</button>
+					<button class="" data-action-type="advanced-camera-settings"  data-active="false" style="grid-column: 2;" title="Advanced Video Settings" onclick="requestVideoSettings(this);">
+						<span data-translate="advanced-camera-settings"><i class="las la-sliders-h"></i> Video Settings</span>
+					</button>
+					
+					<div id='advanced_audio_director_' class='advanced'></div>
+					<div id='advanced_video_director_' class='advanced'></div>
+	
+				</div>		
+			</div>
 				
-				<button  data-action-type="toggle-remote-speaker"  style="grid-column: 1;" title="Toggle the remote guest's speaker output" onclick="remoteSpeakerMute(this, event);">
-					<i class="las la-volume-off"></i> <span data-translate="toggle-remote-speaker">Deafen Guest</span>
-				</button>
-				<button  data-action-type="toggle-remote-display"  style="grid-column: 2;" title="Toggle the remote guest's display output" onclick="remoteDisplayMute(this, event);">
-					<i class="las la-eye-slash"></i> <span data-translate="toggle-remote-display">Blind Guest</span>
-				</button>
-				
-				<button class="" data-action-type="advanced-audio-settings"  data-active="false" style="grid-column: 1;" title="Remote Audio Settings" onclick="requestAudioSettings(this);">
-					<span data-translate="advanced-audio-settings"><i class="las la-sliders-h"></i> Audio Settings</span>
-				</button>
-				<button class="" data-action-type="advanced-camera-settings"  data-active="false" style="grid-column: 2;" title="Advanced Video Settings" onclick="requestVideoSettings(this);">
-					<span data-translate="advanced-camera-settings"><i class="las la-sliders-h"></i> Video Settings</span>
-				</button>
-				
-
-			</div>	
 		</div>
 		
 		<div id="popupSelector" style="display:none;">

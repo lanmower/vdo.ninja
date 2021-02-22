@@ -4972,8 +4972,12 @@ function requestVideoSettings(ele) {
 }
 
 function createControlBox(UUID, soloLink, streamID) {
-	if (document.getElementById("deleteme")) {
-		getById("deleteme").parentNode.removeChild(getById("deleteme"));
+
+	var placeholders = document.querySelector('#guestFeeds.placeholders');
+
+	if (placeholders) {
+		getById("guestFeeds").innerHTML = '';
+		placeholders.classList.remove('placeholders');
 	}
 	var controls = getById("controls_blank").cloneNode(true);
 
@@ -4982,14 +4986,33 @@ function createControlBox(UUID, soloLink, streamID) {
 	container.className = "vidcon";
 	container.style.margin = "15px 20px 0 0 ";
 
+	var container_contentTile = document.createElement("div");
+	container_contentTile.className = "control_panel";
+
 	controls.style.display = "block";
 	controls.id = "controls_" + UUID;
 	getById("guestFeeds").appendChild(container);
+	container.appendChild(container_contentTile);
 
-	var buttons = "<div class='streamID' style='user-select: none;'>ID: <span style='user-select: text;'>" + streamID + "</span>\
-	<i class='las la-copy' data-sid='" + streamID + "' onmousedown='copyFunction(this.dataset.sid)' onclick='popupMessage(event);copyFunction(this.dataset.sid)' title='Copy this Stream ID to the clipboard' style='cursor:pointer'></i>\
-	<span id='label_" + UUID + "' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>\
-	</div>";
+	var buttons = `
+	<h2 class='streamID' style='user-select: none;' onclick='expandPanel(this)'>
+		<i class="las la-caret-right"></i>
+		<span style='user-select: text;'>${streamID}</span>
+		<i class='las la-copy' data-sid='${streamID}' onmousedown='copyFunction(this.dataset.sid)' onclick='popupMessage(event);copyFunction(this.dataset.sid)' title='Copy this Stream ID to the clipboard'></i>
+		<span id='label_${UUID}' title='Click here to edit the label for this stream. Changes will propagate to all viewers of this stream'></span>
+	</h2>
+	<span class="control_panel_quality_toggles">
+	<button data-action-type="change-quality1" title="Disable Video Preview" onclick="toggleQualityDirector(0, '${UUID}', this);">
+		<span data-translate="change-to-low-quality">×</span>
+	</button>
+	<button class="pressed" data-action-type="change-quality2" title="Low-Quality Preview" onclick="toggleQualityDirector(50, '${UUID}', this);">
+		<span data-translate="change-to-medium-quality">L</span>
+	</button>
+	<button data-action-type="change-quality3" title="High-Quality Preview" onclick="toggleQualityDirector(1200, '${UUID}', this);">
+		<span data-translate="change-to-high-quality">H</span>
+	</button>
+</span>
+	`;
 
 	if (!session.rpcs[UUID].voiceMeter) {
 		session.rpcs[UUID].voiceMeter = getById("voiceMeterTemplate").cloneNode(true);
@@ -5000,13 +5023,13 @@ function createControlBox(UUID, soloLink, streamID) {
 	}
 
 	session.rpcs[UUID].voiceMeter.style.top = "1vh";
-	session.rpcs[UUID].voiceMeter.style.right = "1vh";
+	session.rpcs[UUID].voiceMeter.style.right = "0.5vw";
 
 
 	session.rpcs[UUID].remoteMuteElement = getById("muteStateTemplate").cloneNode(true);
 	session.rpcs[UUID].remoteMuteElement.id = "";
 	session.rpcs[UUID].remoteMuteElement.style.top = "1vh";
-	session.rpcs[UUID].remoteMuteElement.style.right = "1vh";
+	session.rpcs[UUID].remoteMuteElement.style.right = "0.5vw";
 
 
 	var videoContainer = document.createElement("div");
@@ -5014,12 +5037,13 @@ function createControlBox(UUID, soloLink, streamID) {
 	videoContainer.style.margin = "0";
 	videoContainer.style.position = "relative";
 
-	controls.innerHTML += "<div style='margin:10px;' id='advanced_audio_director_" + UUID + "' class='advanced'></div>";
-	controls.innerHTML += "<div style='margin:10px;' id='advanced_video_director_" + UUID + "' class='advanced'></div>";
+
+	controls.querySelector('#advanced_audio_director_').id = controls.querySelector('#advanced_audio_director_').id + UUID;
+	controls.querySelector('#advanced_video_director_').id = controls.querySelector('#advanced_video_director_').id + UUID;
 
 	var handsID = "hands_" + UUID;
 
-	controls.innerHTML += "<div>\
+	controls.innerHTML += "<div class='control_panel'><h2>Solo links</h2>\
 		<div style='padding:5px;word-wrap: break-word; overflow:hidden; white-space: nowrap; overflow: hidden; font-size:0.7em; text-overflow: ellipsis;' title='A direct solo view of the video/audio stream with nothing else. Its audio can be remotely controlled from here'> \
 		<a class='soloLink' data-drag='1' draggable='true' onmousedown='copyFunction(this)' onclick='popupMessage(event);copyFunction(this)' \
 		value='" + soloLink + "' href='" + soloLink + "'/>" + soloLink + "</a>\
@@ -5035,8 +5059,9 @@ function createControlBox(UUID, soloLink, streamID) {
 		ele.dataset.UUID = UUID;
 	});
 
-	container.innerHTML = buttons;
-	container.appendChild(videoContainer);
+	
+	container_contentTile.innerHTML = buttons;
+	container_contentTile.appendChild(videoContainer);
 	videoContainer.appendChild(session.rpcs[UUID].voiceMeter);
 	videoContainer.appendChild(session.rpcs[UUID].remoteMuteElement);
 	container.appendChild(controls);
@@ -5503,8 +5528,12 @@ function gotDevices(deviceInfos) { // https://github.com/webrtc/samples/blob/gh-
 }
 
 
-if (location.protocol !== 'https:') {
-	if (!(session.cleanOutput)) {
+if (
+	location.protocol !== "https:" 		&&
+	location.hostname !=  "localhost" 	&&
+	location.hostname !=  "127.0.0.1"
+) {
+	if (!session.cleanOutput) {
 		alert("SSL (https) is not enabled. This site will not work without it!");
 	}
 }
@@ -8350,7 +8379,9 @@ function updateDirectorsAudio(dataN, UUID) {
 				errorlog(e);
 			}
 		}
+		getById("advanced_audio_director_" + UUID).className = 'control_panel_sub';
 		getById("advanced_audio_director_" + UUID).appendChild(audioEle);
+		getById("advanced_audio_director_" + UUID).parentElement.style.maxHeight = getById("advanced_audio_director_" + UUID).parentElement.scrollHeight + "px";
 	}
 }
 
@@ -8513,7 +8544,9 @@ function updateDirectorsVideo(data, UUID) {
 
 	getById("advanced_video_director_" + UUID).innerHTML = "";
 	getById("advanced_video_director_" + UUID).appendChild(videoEle);
-	getById("advanced_video_director_" + UUID).className = "";
+	getById("advanced_video_director_" + UUID).className = "control_panel_sub";
+	getById("advanced_video_director_" + UUID).parentElement.style.maxHeight = getById("advanced_video_director_" + UUID).parentElement.scrollHeight + "px";
+
 }
 
 ///////
@@ -11522,3 +11555,26 @@ addEventToAll("#multiselect-trigger3", 'mousedown touchend focusin focusout', fu
 });
 
 		  
+function expandPanel(element) {
+
+	element.parentElement.classList.toggle("active");
+
+	if (element.parentElement.classList.contains('active')) {
+		element.querySelector('i').className = 'las la-caret-down';
+	} else {
+		element.querySelector('i').className = 'las la-caret-right';
+	}
+
+	
+	var content = element.parentElement.querySelector(".controlsGrid");
+
+	if (content.style.maxHeight) {
+		content.style.maxHeight = null;
+	} else {
+		content.style.maxHeight = content.scrollHeight + "px";
+	}
+	setTimeout(function () {
+		element.scrollIntoView({ block: "center", behavior: "smooth" });
+	}, 200)
+
+}
